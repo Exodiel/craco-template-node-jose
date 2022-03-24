@@ -1,28 +1,28 @@
-import React, { Component } from 'react';
+import React, { FC, useState, ChangeEvent } from 'react';
 import logo from './logo.svg';
 import './App.less';
-
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+import { generateJWT } from './utils/JWT';
+const App: FC = () => {
+  const [user, setUser] = useState('');
+  const handleChangeInput = (ev: ChangeEvent<HTMLInputElement>) => {
+    setUser(ev.target.value);
   }
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <input type="text" onChange={handleChangeInput} />
+        <button type='button' onClick={async () => { 
+          if (user) {
+            await generateJWT(user)
+          }
+         }}>JWT</button>
+      </header>
+    </div>
+  );
 }
 
 export default App;
