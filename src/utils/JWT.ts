@@ -40,7 +40,12 @@ const jwtData = {
   }
 }
 
-const prepareKeys = async () => {
+const prepareKeys = async (): Promise<{
+  privateToSign: JWK.Key;
+  publicToVerify: JWK.Key;
+  publicToEncrypt: JWK.Key;
+  privateToDecrypt: JWK.Key;
+}> => {
   const keyStore = JWK.createKeyStore();
   const privateToSign = await keyStore.add(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RS256", kid: "private-to-sign" });
   const publicToVerify = await keyStore.add(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RS256", kid: "public-to-verify" });
@@ -66,7 +71,7 @@ const sign = async (privateToSign: JWK.Key, data: {
     alg: string;
     typ: string;
   };
-}) => {
+}): Promise<JWS.CreateSignResult> => {
   const signed = await JWS
     .createSign({
       alg: signAlg,
@@ -79,7 +84,7 @@ const sign = async (privateToSign: JWK.Key, data: {
   return signed
 }
 
-const encrypt = async (publicToEncrypt: JWK.Key, data: JWS.CreateSignResult) => {
+const encrypt = async (publicToEncrypt: JWK.Key, data: JWS.CreateSignResult): Promise<string> => {
   const encrypted = await JWE
     .createEncrypt({
       contentAlg: encryptionAndContentAlg,
@@ -97,17 +102,17 @@ const encrypt = async (publicToEncrypt: JWK.Key, data: JWS.CreateSignResult) => 
   return encrypted
 }
 
-export const decrypt = async (privateToDecrypt: JWK.Key, encryptedJWT: string) => {
+export const decrypt = async (privateToDecrypt: JWK.Key, encryptedJWT: string): Promise<JWE.DecryptResult> => {
   const decrypted = await JWE.createDecrypt(privateToDecrypt).decrypt(encryptedJWT);
   return decrypted;
 }
 
-export const verify = async (publicToVerify: JWK.Key, input: string) => {
+export const verify = async (publicToVerify: JWK.Key, input: string): Promise<JWS.VerificationResult> => {
   const verified = await JWS.createVerify(publicToVerify).verify(input)
   return verified;
 }
 
-export const generateJWT = async (userId: string) => {
+export const generateJWT = async (userId: string): Promise<void> => {
   const currenDate = new Date()
   const newPayload = jwtData.payload
 
