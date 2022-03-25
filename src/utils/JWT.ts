@@ -46,12 +46,16 @@ const prepareKeys = async (): Promise<{
   publicToEncrypt: JWK.Key;
   privateToDecrypt: JWK.Key;
 }> => {
-  const keyStore = JWK.createKeyStore();
-  const privateToSign = await keyStore.add(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RS256", kid: "private-to-sign" });
-  const publicToVerify = await keyStore.add(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RS256", kid: "public-to-verify" });
-  const publicToEncrypt = await keyStore.add(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RSA-OAEP-256", kid: "public-to-encrypt" });
-  const privateToDecrypt = await keyStore.add(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RSA-OAEP-256", kid: "private-to-decrypt" });
-
+  // const keyStore = JWK.createKeyStore();
+  // const privateToSign = await keyStore.add(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RS256", kid: "private-to-sign" });
+  // const publicToVerify = await keyStore.add(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RS256", kid: "public-to-verify" });
+  // const publicToEncrypt = await keyStore.add(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RSA-OAEP-256", kid: "public-to-encrypt" });
+  // const privateToDecrypt = await keyStore.add(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RSA-OAEP-256", kid: "private-to-decrypt" });
+ 
+  const privateToSign = await JWK.asKey(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RS256", kid: "private-to-sign" });
+  const publicToVerify = await JWK.asKey(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RS256", kid: "public-to-verify" });
+  const publicToEncrypt = await JWK.asKey(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RSA-OAEP-256", kid: "public-to-encrypt" });
+  const privateToDecrypt = await JWK.asKey(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RSA-OAEP-256", kid: "private-to-decrypt" });
 
   return {
     privateToSign,
