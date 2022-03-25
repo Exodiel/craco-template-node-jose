@@ -88,7 +88,7 @@ const encrypt = async (publicToEncrypt: JWK.Key, data: JWS.CreateSignResult) => 
         alg: encryptionAlg,
         cty: 'JWT',
         enc: encryptionAndContentAlg,
-        iss: 'TODO1'
+        iss: 'JIP'
       }
     }, publicToEncrypt)
     .update(data)
