@@ -6,14 +6,15 @@ By using this template or by following the guide bellow your project has support
  - Typescript
  - Less
  - Nav-frontend support
+ - Use node-jose for sign, verify, encrypt and decrypt information
  - Zero downtime deploy with Create-React-App (CRA) setup*
 
 ## How to create this template
 ```
 npx create-react-app my-app
 cd my-app
-npm install @craco/craco --save
-npm install --save typescript @types/node @types/react @types/react-dom @types/jest
+npm install --save node-jose react react-dom moment
+npm install --save-dev @craco/craco @testing-library/jest-dom @testing-library/react @testing-library/react-hooks @testing-library/user-event @types/faker@5.5.9 faker@5.5.3 typescript @types/node @types/react @types/react-dom @types/jest
 ```
 
 Then add typescript and less support to the project:
@@ -26,8 +27,8 @@ Add a craco.config.js in the root directory. The craco.config.js found in this p
 
 Lastly add the last craco packages and start the project:
 ```
-npm install --save craco-less
-npm install --save less-plugin-npm-import
+npm install --save-dev craco-less
+npm install --save-dev less-plugin-npm-import
 npm start
 ```
 

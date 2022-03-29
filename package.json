@@ -3,25 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@craco/craco": "^3.4.1",
-    "@types/jest": "^24.0.6",
-    "@types/node": "^11.9.4",
-    "@types/react": "^16.8.3",
-    "@types/react-dom": "^16.8.2",
-    "craco-less": "^1.6.0",
-    "faker": "^5.5.3",
-    "less-plugin-npm-import": "^2.1.0",
-    "moment": "^2.29.1",
-    "node-jose": "^2.1.0",
-    "react": "^16.8.2",
-    "react-dom": "^16.8.2",
-    "react-scripts": "2.1.5",
-    "typescript": "^3.3.3"
+    "moment": "2.29.1",
+    "node-jose": "2.1.0",
+    "react": "16.8.2",
+    "react-dom": "16.8.2"
   },
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "coverage": "vitest run --coverage",
     "eject": "craco eject"
   },
   "eslintConfig": {
@@ -34,7 +26,25 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@types/faker": "^5.5.9",
-    "@types/node-jose": "^1.1.10"
+    "@craco/craco": "6.4.3",
+    "@testing-library/jest-dom": "5.16.3",
+    "@testing-library/react": "12.1.4",
+    "@testing-library/react-hooks": "7.0.2",
+    "@testing-library/user-event": "14.0.0",
+    "@types/faker": "5.5.9",
+    "@types/jest": "24.0.6",
+    "@types/node": "11.9.4",
+    "@types/node-jose": "1.1.10",
+    "@types/react": "16.8.3",
+    "@types/react-dom": "16.8.2",
+    "faker": "5.5.3",
+    "react-scripts": "5.0.0",
+    "typescript": "4.6.3",
+    "vitest": "0.8.0"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "**/*.{js,jsx}"
+    ]
   }
 }

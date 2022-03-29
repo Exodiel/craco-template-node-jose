@@ -40,18 +40,13 @@ const jwtData = {
   }
 }
 
-const prepareKeys = async (): Promise<{
+export const prepareKeys = async (): Promise<{
   privateToSign: JWK.Key;
   publicToVerify: JWK.Key;
   publicToEncrypt: JWK.Key;
   privateToDecrypt: JWK.Key;
 }> => {
-  // const keyStore = JWK.createKeyStore();
-  // const privateToSign = await keyStore.add(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RS256", kid: "private-to-sign" });
-  // const publicToVerify = await keyStore.add(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RS256", kid: "public-to-verify" });
-  // const publicToEncrypt = await keyStore.add(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RSA-OAEP-256", kid: "public-to-encrypt" });
-  // const privateToDecrypt = await keyStore.add(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RSA-OAEP-256", kid: "private-to-decrypt" });
- 
+   
   const privateToSign = await JWK.asKey(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RS256", kid: "private-to-sign" });
   const publicToVerify = await JWK.asKey(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RS256", kid: "public-to-verify" });
   const publicToEncrypt = await JWK.asKey(REACT_APP_PRIVATE_KEY, fileFormat, { alg: "RSA-OAEP-256", kid: "public-to-encrypt" });
@@ -65,7 +60,7 @@ const prepareKeys = async (): Promise<{
   }
 }
 
-const sign = async (privateToSign: JWK.Key, data: {
+export const sign = async (privateToSign: JWK.Key, data: {
   payload: {
     content: string;
     aud: string;
@@ -88,7 +83,7 @@ const sign = async (privateToSign: JWK.Key, data: {
   return signed
 }
 
-const encrypt = async (publicToEncrypt: JWK.Key, data: JWS.CreateSignResult): Promise<string> => {
+export const encrypt = async (publicToEncrypt: JWK.Key, data: JWS.CreateSignResult): Promise<string> => {
   const encrypted = await JWE
     .createEncrypt({
       contentAlg: encryptionAndContentAlg,
@@ -116,23 +111,25 @@ export const verify = async (publicToVerify: JWK.Key, input: string): Promise<JW
   return verified;
 }
 
-export const generateJWT = async (userId: string): Promise<void> => {
-  const currenDate = new Date()
-  const newPayload = jwtData.payload
-
-  /** Override all the necesary current values of the jwtData */
-  newPayload.exp = moment(currenDate).add(parseInt(REACT_APP_EXPIRY_DAYS, 10), 'days').unix()
-  newPayload.content.lastAccessDate = moment(currenDate).format('yyyyMMddHHmmss')
-  newPayload.content.user.userNickname = userId
-
+export const preparePayload = (userId: string) => {
+  const currenDate = new Date();
+  const newPayload = jwtData.payload;
+  newPayload.exp = moment(currenDate).add(parseInt(REACT_APP_EXPIRY_DAYS, 10), 'days').unix();
+  newPayload.content.lastAccessDate = moment(currenDate).format('yyyyMMddHHmmss');
+  newPayload.content.user.userNickname = userId;
   const newJwt = {
     ...jwtData,
     payload: {
       ...jwtData.payload,
       content: JSON.stringify(newPayload.content)
     }
-  }
+  };
+  return newJwt;
+}
 
+export const generateJWT = async (userId: string): Promise<void> => {
+
+  const newJwt = preparePayload(userId);
 
   const generatedKeys = await prepareKeys();
   const signedJWT = await sign(generatedKeys.privateToSign, newJwt);
@@ -147,6 +144,4 @@ export const generateJWT = async (userId: string): Promise<void> => {
 
   console.log('DEV-DEC-JWT', et.payload.toString())
   console.log('DEV-SIGNED-VERIFY', JSON.parse(JSON.parse(st.payload.toString()).content))
-
-  // return encryptedJWT
 }

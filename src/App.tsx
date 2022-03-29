@@ -1,6 +1,6 @@
 import React, { FC, useState, ChangeEvent } from 'react';
 import logo from './logo.svg';
-import './App.less';
+import './App.css';
 import { generateJWT } from './utils/JWT';
 const App: FC = () => {
   const [user, setUser] = useState('');
